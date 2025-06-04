@@ -9,6 +9,8 @@ export default function Container() {
   const [input, setInput] = useState("");
   const [isFocused, setIsFocused] = useState(false);
 
+  const [loading, setLoading] = useState(true);
+
   const [startTime, setStartTime] = useState<number | null>(null);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [wpm, setWPM] = useState(0);
@@ -17,10 +19,26 @@ export default function Container() {
   const [showStats, setShowStats] = useState(false);
 
   // Fetch a random paragraph on load
+  // useEffect(() => {
+  //   getRandomParagraph()
+  //     .then((paragraph) => setText(paragraph))
+  //     .catch((err) => console.error(err));
+  // }, []);
+
   useEffect(() => {
-    getRandomParagraph()
-      .then((paragraph) => setText(paragraph))
-      .catch((err) => console.error(err));
+    const loadParagraph = async () => {
+      setLoading(true);
+      try {
+        const paragraph = await getRandomParagraph();
+        setText(paragraph);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadParagraph();
   }, []);
 
   // Automatically focus when user starts typing
@@ -112,8 +130,21 @@ export default function Container() {
     }
   };
 
+  // const restartTest = async () => {
+  //   setText(await getRandomParagraph());
+  //   setInput("");
+  //   setStartTime(null);
+  //   setElapsedTime(0);
+  //   setWPM(0);
+  //   setAccuracy(100);
+  //   setIsFinished(false);
+  //   setShowStats(false);
+  // };
+
   const restartTest = async () => {
-    setText(await getRandomParagraph());
+    setLoading(true);
+    const newParagraph = await getRandomParagraph();
+    setText(newParagraph);
     setInput("");
     setStartTime(null);
     setElapsedTime(0);
@@ -121,7 +152,16 @@ export default function Container() {
     setAccuracy(100);
     setIsFinished(false);
     setShowStats(false);
+    setLoading(false);
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-900 text-white text-xl">
+        <div className="animate-pulse">Loading paragraph...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 p-4 relative">
