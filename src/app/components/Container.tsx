@@ -157,7 +157,7 @@ export default function Container() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-950 text-white">
+      <div className="flex items-center justify-center min-h-screen  bg-gradient-to-br from-gray-900 to-gray-800 text-white">
         <div className="text-center space-y-4">
           <div className="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>
           <div className="text-lg font-medium animate-pulse">Loading...</div>
