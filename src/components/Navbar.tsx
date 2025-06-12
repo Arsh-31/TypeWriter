@@ -73,41 +73,34 @@ export default function Navbar() {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-gray-900/80 backdrop-blur-md shadow-md">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-[#F8F5FF] border-b border-[#E3DDEF] backdrop-blur-sm shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Left - Brand */}
-          <div className="flex items-center space-x-2">
-            <FaKeyboard className="h-6 w-6 text-cyan-400" />
-            <span className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400">
+          <div className="flex items-center space-x-3">
+            <div className="p-2 rounded-lg bg-[#E3DDEF] shadow-inner">
+              <FaKeyboard className="h-5 w-5 text-[#A68CB0]" />
+            </div>
+            <span className="text-xl font-semibold tracking-tight text-[#4E4C67]">
               TypeWriter
             </span>
           </div>
 
+          {/* Right - Authenticated or Login */}
           {isAuthenticated ? (
             <div className="relative flex items-center gap-3" ref={dropdownRef}>
-              {/* Avatar with hover effect */}
               <button
                 onClick={() => setProfileMenuOpen(!profileMenuOpen)}
-                className={`flex items-center justify-center w-10 h-10 rounded-full ${getAvatarColor()} text-white text-lg font-bold transition-transform hover:scale-105`}
+                className="flex items-center space-x-1 text-sm font-medium text-[#4E4C67] hover:text-[#A68CB0] transition"
               >
-                {userName?.charAt(0).toUpperCase()}
-              </button>
-
-              {/* Username with subtle hover effect */}
-              <button
-                onClick={() => setProfileMenuOpen(!profileMenuOpen)}
-                className="text-gray-300 hover:text-white font-medium transition-colors focus:outline-none flex items-center"
-              >
-                {userName}
+                <span className="font-bold">Hello, {userName}</span>
                 <svg
-                  className={`ml-1 w-4 h-4 transition-transform ${
+                  className={`w-4 h-4 transform transition-transform ${
                     profileMenuOpen ? "rotate-180" : ""
-                  }`}
+                  } text-[#A68CB0]/80`}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
                     strokeLinecap="round"
@@ -118,58 +111,28 @@ export default function Navbar() {
                 </svg>
               </button>
 
-              {/* Dropdown Menu - matches container style */}
+              {/* Dropdown */}
               {profileMenuOpen && (
-                <div className="absolute right-0 top-14 mt-1 w-56 bg-gray-800 border border-gray-700 rounded-lg shadow-xl shadow-cyan-500/10 overflow-hidden z-50 animate-fade-in">
-                  <div className="px-4 py-3 border-b border-gray-700">
-                    <p className="text-sm font-medium text-gray-300">
-                      Signed in as
-                    </p>
-                    <p className="text-sm font-semibold text-white truncate">
-                      {userName}
-                    </p>
-                  </div>
+                <div className="absolute right-0 top-12 w-56 backdrop-blur-md bg-white/80 border border-[#E3DDEF] rounded-2xl shadow-xl shadow-[#A68CB0]/10 z-50 overflow-hidden animate-fadeIn ring-1 ring-[#E3DDEF]/40">
+                  {/* Header */}
 
+                  {/* Links */}
                   <div className="py-1">
-                    <a
-                      href="#"
-                      className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-cyan-400 transition-colors"
-                    >
-                      Your Profile
-                    </a>
-                    <a
-                      href="#"
-                      className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-cyan-400 transition-colors"
-                    >
-                      Statistics
-                    </a>
-                    <a
-                      href="#"
-                      className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-cyan-400 transition-colors"
+                    <Link
+                      href="/settings"
+                      onClick={() => setProfileMenuOpen(false)}
+                      className="block px-4 py-2 text-sm text-[#4E4C67] hover:bg-[#F1EDF9]/60 hover:text-[#A68CB0] transition rounded-md"
                     >
                       Settings
-                    </a>
+                    </Link>
                   </div>
 
-                  <div className="border-t border-gray-700 py-1">
+                  {/* Divider + Logout */}
+                  <div className="border-t border-[#E8E3F4] py-1">
                     <button
                       onClick={handleLogout}
-                      className="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-gray-700 hover:text-red-300 transition-colors flex items-center"
+                      className="w-full text-left px-4 py-2 text-sm text-[#7F7D93] hover:bg-[#F1EDF9]/60 hover:text-[#A68CB0] transition rounded-md"
                     >
-                      <svg
-                        className="w-4 h-4 mr-2"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                        />
-                      </svg>
                       Sign out
                     </button>
                   </div>
@@ -177,10 +140,9 @@ export default function Navbar() {
               )}
             </div>
           ) : (
-            // Login button (unchanged)
             <Link href="/login">
-              <button className="flex items-center space-x-2 px-4 py-2 rounded-md bg-gradient-to-r from-cyan-600 to-emerald-600 hover:from-cyan-500 hover:to-emerald-500 text-white transition-all shadow-md hover:shadow-cyan-500/30">
-                <FaSignInAlt className="h-4 w-4" />
+              <button className="px-4 py-2 rounded-md bg-[#E3DDEF] border border-[#D9D3E8] text-[#4E4C67] hover:bg-[#DAD3ED] transition flex items-center gap-2 text-sm font-medium shadow-sm">
+                <FaSignInAlt className="h-4 w-4 text-[#A68CB0]" />
                 <span>Login</span>
               </button>
             </Link>

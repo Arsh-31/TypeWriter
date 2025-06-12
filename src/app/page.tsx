@@ -1,7 +1,7 @@
 "use client";
 
-import Navbar from "./components/Navbar";
-import Container from "./components/Container";
+import Navbar from "../components/Navbar";
+import Container from "../components/Container";
 
 export default function Home() {
   return (
