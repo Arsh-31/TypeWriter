@@ -140,10 +140,10 @@ export default function Container() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-[#F8F5FF] text-[#4E4C67]">
+      <div className="flex items-center justify-center min-h-screen bg-[var(--background)] text-[var(--primary)]">
         <div className="text-center space-y-4">
-          <div className="w-8 h-8 border-4 border-[#A68CB0] border-t-transparent rounded-full animate-spin mx-auto"></div>
-          <div className="text-lg font-medium text-[#7F7D93] animate-pulse">
+          <div className="w-8 h-8 border-4 border-[var(--accent)] border-t-transparent rounded-full animate-spin mx-auto"></div>
+          <div className="text-lg font-medium text-[var(--secondary)] animate-pulse">
             Loading...
           </div>
         </div>
@@ -152,13 +152,13 @@ export default function Container() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-[#F8F5FF] p-4 relative">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-[var(--background)] p-4 relative">
       {/* Header */}
       <header className="mb-8 text-center">
-        <h1 className="text-4xl font-bold text-[#4E4C67] mb-2 tracking-tight">
+        <h1 className="text-4xl font-bold text-[var(--primary)] mb-2 tracking-tight">
           Speed Typing Test
         </h1>
-        <p className="text-[#7F7D93]">
+        <p className="text-[var(--secondary)]">
           Type the paragraph as fast and accurately as you can
         </p>
       </header>
@@ -166,26 +166,26 @@ export default function Container() {
       {/* Stats Bar */}
       {showStats && (
         <div className="animate-fade-in-down mb-6 w-full max-w-2xl">
-          <div className="bg-[#F3F0FA] backdrop-blur-md border border-[#E3DDEF] text-[#4E4C67] px-6 py-4 rounded-xl shadow-xl flex flex-wrap justify-between items-center gap-4">
+          <div className="bg-[var(--card-bg)] backdrop-blur-md border border-[var(--card-border)] text-[var(--primary)] px-6 py-4 rounded-xl shadow-xl flex flex-wrap justify-between items-center gap-4">
             <div className="flex flex-col items-center">
-              <span className="text-sm text-[#7F7D93]">WPM</span>
-              <span className="text-2xl font-bold text-[#A68CB0]">{wpm}</span>
+              <span className="text-sm text-[var(--secondary)]">WPM</span>
+              <span className="text-2xl font-bold text-[var(--accent)]">{wpm}</span>
             </div>
             <div className="flex flex-col items-center">
-              <span className="text-sm text-[#7F7D93]">Accuracy</span>
-              <span className="text-2xl font-bold text-[#A68CB0]">
+              <span className="text-sm text-[var(--secondary)]">Accuracy</span>
+              <span className="text-2xl font-bold text-[var(--accent)]">
                 {accuracy}%
               </span>
             </div>
             <div className="flex flex-col items-center">
-              <span className="text-sm text-[#7F7D93]">Time</span>
-              <span className="text-2xl font-bold text-[#A68CB0]">
+              <span className="text-sm text-[var(--secondary)]">Time</span>
+              <span className="text-2xl font-bold text-[var(--accent)]">
                 {elapsedTime}s
               </span>
             </div>
             <button
               onClick={restartTest}
-              className="px-6 py-2 bg-[#E3DDEF] hover:bg-[#DAD3ED] text-[#4E4C67] transition-all rounded-lg font-medium shadow-sm border border-[#D9D3E8]"
+              className="px-6 py-2 bg-[var(--button-bg)] hover:bg-[var(--button-hover)] text-[var(--button-text)] transition-all rounded-lg font-medium shadow-sm border border-[var(--button-border)]"
             >
               Try Again
             </button>
@@ -195,17 +195,17 @@ export default function Container() {
 
       {/* Typing Container */}
       <div
-        className={`w-full max-w-3xl bg-[#F3F0FA]/60 backdrop-blur-sm border border-[#E3DDEF] p-8 rounded-2xl text-lg leading-relaxed tracking-wide relative transition-all duration-300 ${
+        className={`w-full max-w-3xl bg-[var(--card-bg)]/60 backdrop-blur-sm border border-[var(--card-border)] p-8 rounded-2xl text-lg leading-relaxed tracking-wide relative transition-all duration-300 ${
           isFinished
             ? "opacity-50"
-            : "opacity-100 shadow-xl shadow-[#C5BFE2]/40"
+            : "opacity-100 shadow-xl shadow-[var(--accent)]/40"
         }`}
         onClick={() => setIsFocused(true)}
       >
         {/* Character indicators */}
         <div className="flex flex-wrap gap-[2px] mb-2">
           {text.split("").map((char, idx) => {
-            let className = "text-[#B0A9C1] transition-colors duration-100";
+            let className = "text-[var(--secondary)] transition-colors duration-100";
 
             if (idx < input.length) {
               className =
@@ -213,7 +213,7 @@ export default function Container() {
                   ? "text-green-600"
                   : "text-red-500 bg-red-200/30";
             } else if (idx === input.length && !isFinished) {
-              className = "text-[#4E4C67] bg-[#E8E3F4]";
+              className = "text-[var(--primary)] bg-[var(--hover)]";
             }
 
             return (
@@ -230,9 +230,9 @@ export default function Container() {
         </div>
 
         {/* Progress bar */}
-        <div className="h-1.5 bg-[#E3DDEF] rounded-full overflow-hidden mt-4">
+        <div className="h-1.5 bg-[var(--border)] rounded-full overflow-hidden mt-4">
           <div
-            className="h-full bg-[#A68CB0] transition-all duration-300"
+            className="h-full bg-[var(--accent)] transition-all duration-300"
             style={{
               width: `${Math.min(100, (input.length / text.length) * 100)}%`,
             }}
@@ -261,13 +261,13 @@ export default function Container() {
       )}
 
       {/* Footer */}
-      <footer className="mt-8 text-center text-[#7F7D93] text-sm">
+      <footer className="mt-8 text-center text-[var(--secondary)] text-sm">
         {!startTime && !isFinished ? (
           <p className="animate-pulse">Start typing to begin the test...</p>
         ) : (
           <p>
             Press{" "}
-            <kbd className="px-2 py-1 bg-[#E3DDEF] text-[#4E4C67] rounded">
+            <kbd className="px-2 py-1 bg-[var(--button-bg)] text-[var(--button-text)] rounded border border-[var(--button-border)]">
               Esc
             </kbd>{" "}
             to reset

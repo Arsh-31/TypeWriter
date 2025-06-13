@@ -23,10 +23,9 @@ export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [username, setUsername] = useState(""); // 👈 new
+  const [username, setUsername] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
-
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -45,7 +44,6 @@ export default function AuthPage() {
         );
         const user = userCredential.user;
 
-        // 👇 Store username in Firestore
         await setDoc(doc(db, "users", user.uid), {
           email: user.email,
           username,
@@ -56,41 +54,22 @@ export default function AuthPage() {
       router.push("/");
     } catch (err: any) {
       setError(err.message);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  // const handleGoogleLogin = async () => {
-  //   const provider = new GoogleAuthProvider();
-  //   try {
-  //     const result = await signInWithPopup(auth, provider);
-  //     const user = result.user;
-
-  //     // 👇 Create doc only if it's new
-  //     const userDoc = await getDoc(doc(db, "users", user.uid));
-  //     if (!userDoc.exists()) {
-  //       await setDoc(doc(db, "users", user.uid), {
-  //         email: user.email,
-  //         username: user.displayName || "Anonymous",
-  //       });
-  //     }
-
-  //     router.push("/dashboard");
-  //   } catch (err: any) {
-  //     setError(err.message);
-  //   }
-  // };
-
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#F8F5FF] px-4">
-      <div className="bg-white border border-[#E3DDEF] p-8 rounded-2xl shadow-lg shadow-[#A68CB0]/10 w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center bg-[var(--background)] px-4">
+      <div className="bg-[var(--card-bg)] border border-[var(--card-border)] p-8 rounded-2xl shadow-lg shadow-[var(--accent)]/10 w-full max-w-md">
         {/* Toggle Buttons */}
-        <div className="flex mb-6 bg-[#F3F0FA] rounded-lg p-1 border border-[#E3DDEF]">
+        <div className="flex mb-6 bg-[var(--hover)] rounded-lg p-1 border border-[var(--border)]">
           <button
             onClick={() => setIsLogin(true)}
             className={`flex-1 py-3 rounded-md text-center font-medium transition-all ${
               isLogin
-                ? "bg-[#A68CB0] text-white shadow-sm"
-                : "text-[#4E4C67] hover:bg-[#ECE9F6]"
+                ? "bg-[var(--accent)] text-white shadow-sm"
+                : "text-[var(--primary)] hover:bg-[var(--hover)]"
             }`}
           >
             Login
@@ -99,8 +78,8 @@ export default function AuthPage() {
             onClick={() => setIsLogin(false)}
             className={`flex-1 py-3 rounded-md text-center font-medium transition-all ${
               !isLogin
-                ? "bg-[#A68CB0] text-white shadow-sm"
-                : "text-[#4E4C67] hover:bg-[#ECE9F6]"
+                ? "bg-[var(--accent)] text-white shadow-sm"
+                : "text-[var(--primary)] hover:bg-[var(--hover)]"
             }`}
           >
             Sign Up
@@ -109,10 +88,10 @@ export default function AuthPage() {
 
         {/* Header */}
         <div className="text-center mb-6">
-          <h1 className="text-2xl font-bold text-[#4E4C67] mb-2">
+          <h1 className="text-2xl font-bold text-[var(--primary)] mb-2">
             {isLogin ? "Welcome Back" : "Create Account"}
           </h1>
-          <p className="text-[#7F7D93] text-sm">
+          <p className="text-[var(--secondary)] text-sm">
             {isLogin
               ? "Continue your typing journey"
               : "Join to track your progress"}
@@ -121,7 +100,7 @@ export default function AuthPage() {
 
         {/* Error Message */}
         {error && (
-          <div className="mb-4 p-3 bg-[#FBEAEC] border border-[#F4C7CD] rounded-lg text-[#8C4E57] text-sm text-center">
+          <div className="mb-4 p-3 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg text-red-600 dark:text-red-400 text-sm text-center">
             {error}
           </div>
         )}
@@ -130,13 +109,13 @@ export default function AuthPage() {
         <form onSubmit={handleSubmit} className="space-y-4">
           {!isLogin && (
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#B3A7C5]">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[var(--secondary)]">
                 <FaUser />
               </div>
               <input
                 type="text"
                 placeholder="Username"
-                className="w-full pl-10 pr-4 py-3 bg-[#F8F5FF] border border-[#E3DDEF] rounded-lg focus:border-[#A68CB0] focus:ring-1 focus:ring-[#A68CB0] text-[#4E4C67] placeholder-[#B3A7C5] transition"
+                className="w-full pl-10 pr-4 py-3 bg-[var(--input-bg)] border border-[var(--input-border)] rounded-lg focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)] text-[var(--primary)] placeholder-[var(--secondary)] transition"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
@@ -145,13 +124,13 @@ export default function AuthPage() {
           )}
 
           <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#B3A7C5]">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[var(--secondary)]">
               <FaEnvelope />
             </div>
             <input
               type="email"
               placeholder="Email"
-              className="w-full pl-10 pr-4 py-3 bg-[#F8F5FF] border border-[#E3DDEF] rounded-lg focus:border-[#A68CB0] focus:ring-1 focus:ring-[#A68CB0] text-[#4E4C67] placeholder-[#B3A7C5] transition"
+              className="w-full pl-10 pr-4 py-3 bg-[var(--input-bg)] border border-[var(--input-border)] rounded-lg focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)] text-[var(--primary)] placeholder-[var(--secondary)] transition"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -159,13 +138,13 @@ export default function AuthPage() {
           </div>
 
           <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#B3A7C5]">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[var(--secondary)]">
               <FaLock />
             </div>
             <input
               type="password"
               placeholder="Password"
-              className="w-full pl-10 pr-4 py-3 bg-[#F8F5FF] border border-[#E3DDEF] rounded-lg focus:border-[#A68CB0] focus:ring-1 focus:ring-[#A68CB0] text-[#4E4C67] placeholder-[#B3A7C5] transition"
+              className="w-full pl-10 pr-4 py-3 bg-[var(--input-bg)] border border-[var(--input-border)] rounded-lg focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)] text-[var(--primary)] placeholder-[var(--secondary)] transition"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -177,8 +156,8 @@ export default function AuthPage() {
             disabled={isSubmitting}
             className={`w-full py-3 px-4 rounded-lg font-medium transition-all ${
               isSubmitting
-                ? "bg-[#D6D1E8] text-[#7F7D93] cursor-not-allowed"
-                : "bg-[#A68CB0] text-white hover:bg-[#8C73A2]"
+                ? "bg-[var(--button-bg)] text-[var(--secondary)] cursor-not-allowed"
+                : "bg-[var(--accent)] text-white hover:bg-[var(--accent)]/90"
             }`}
           >
             <div className="flex items-center justify-center gap-2">
@@ -195,13 +174,13 @@ export default function AuthPage() {
         </form>
 
         {/* Footer */}
-        <div className="mt-6 text-center text-sm text-[#7F7D93]">
+        <div className="mt-6 text-center text-sm text-[var(--secondary)]">
           {isLogin ? (
             <p>
               New here?{" "}
               <button
                 onClick={() => setIsLogin(false)}
-                className="text-[#A68CB0] hover:text-[#8B73A2] transition-colors"
+                className="text-[var(--accent)] hover:text-[var(--accent)]/80 transition-colors"
               >
                 Create account
               </button>
@@ -211,7 +190,7 @@ export default function AuthPage() {
               Have an account?{" "}
               <button
                 onClick={() => setIsLogin(true)}
-                className="text-[#A68CB0] hover:text-[#8B73A2] transition-colors"
+                className="text-[var(--accent)] hover:text-[var(--accent)]/80 transition-colors"
               >
                 Login instead
               </button>

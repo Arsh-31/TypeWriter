@@ -1,5 +1,3 @@
-// lib/getRandomParagraph.ts
-
 export async function getRandomParagraph(): Promise<string> {
   const response = await fetch(
     "https://baconipsum.com/api/?type=all-meat&paras=1&format=text&words=20"

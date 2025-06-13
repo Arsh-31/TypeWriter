@@ -1,18 +1,20 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { FaKeyboard, FaUserCircle, FaSignInAlt } from "react-icons/fa";
+import { FaKeyboard, FaUserCircle, FaSignInAlt, FaMoon, FaSun } from "react-icons/fa";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth, db } from "../lib/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import { User } from "firebase/auth";
 import Link from "next/link";
+import { useTheme } from "../lib/theme";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false); // Track scroll for sticky effect
   const [profileMenuOpen, setProfileMenuOpen] = useState(false); // Control dropdown visibility
   const [userName, setUserName] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false); // Check auth status
+  const { theme, toggleTheme } = useTheme();
 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -73,80 +75,94 @@ export default function Navbar() {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-[#F8F5FF] border-b border-[#E3DDEF] backdrop-blur-sm shadow-sm">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-[var(--background)] border-b border-[var(--border)] backdrop-blur-sm shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Left - Brand */}
           <div className="flex items-center space-x-3">
-            <div className="p-2 rounded-lg bg-[#E3DDEF] shadow-inner">
-              <FaKeyboard className="h-5 w-5 text-[#A68CB0]" />
+            <div className="p-2 rounded-lg bg-[var(--button-bg)] shadow-inner">
+              <FaKeyboard className="h-5 w-5 text-[var(--accent)]" />
             </div>
-            <span className="text-xl font-semibold tracking-tight text-[#4E4C67]">
+            <span className="text-xl font-semibold tracking-tight text-[var(--primary)]">
               TypeWriter
             </span>
           </div>
 
-          {/* Right - Authenticated or Login */}
-          {isAuthenticated ? (
-            <div className="relative flex items-center gap-3" ref={dropdownRef}>
-              <button
-                onClick={() => setProfileMenuOpen(!profileMenuOpen)}
-                className="flex items-center space-x-1 text-sm font-medium text-[#4E4C67] hover:text-[#A68CB0] transition"
-              >
-                <span className="font-bold">Hello, {userName}</span>
-                <svg
-                  className={`w-4 h-4 transform transition-transform ${
-                    profileMenuOpen ? "rotate-180" : ""
-                  } text-[#A68CB0]/80`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </button>
-
-              {/* Dropdown */}
-              {profileMenuOpen && (
-                <div className="absolute right-0 top-12 w-56 backdrop-blur-md bg-white/80 border border-[#E3DDEF] rounded-2xl shadow-xl shadow-[#A68CB0]/10 z-50 overflow-hidden animate-fadeIn ring-1 ring-[#E3DDEF]/40">
-                  {/* Header */}
-
-                  {/* Links */}
-                  <div className="py-1">
-                    <Link
-                      href="/settings"
-                      onClick={() => setProfileMenuOpen(false)}
-                      className="block px-4 py-2 text-sm text-[#4E4C67] hover:bg-[#F1EDF9]/60 hover:text-[#A68CB0] transition rounded-md"
-                    >
-                      Settings
-                    </Link>
-                  </div>
-
-                  {/* Divider + Logout */}
-                  <div className="border-t border-[#E8E3F4] py-1">
-                    <button
-                      onClick={handleLogout}
-                      className="w-full text-left px-4 py-2 text-sm text-[#7F7D93] hover:bg-[#F1EDF9]/60 hover:text-[#A68CB0] transition rounded-md"
-                    >
-                      Sign out
-                    </button>
-                  </div>
-                </div>
+          {/* Right - Theme Toggle + Auth */}
+          <div className="flex items-center gap-4">
+            {/* Theme Toggle */}
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-lg bg-[var(--button-bg)] text-[var(--button-text)] hover:bg-[var(--button-hover)] transition-colors border border-[var(--button-border)]"
+              aria-label="Toggle theme"
+            >
+              {theme === "dark" ? (
+                <FaSun className="h-5 w-5 text-[var(--accent)]" />
+              ) : (
+                <FaMoon className="h-5 w-5 text-[var(--accent)]" />
               )}
-            </div>
-          ) : (
-            <Link href="/login">
-              <button className="px-4 py-2 rounded-md bg-[#E3DDEF] border border-[#D9D3E8] text-[#4E4C67] hover:bg-[#DAD3ED] transition flex items-center gap-2 text-sm font-medium shadow-sm">
-                <FaSignInAlt className="h-4 w-4 text-[#A68CB0]" />
-                <span>Login</span>
-              </button>
-            </Link>
-          )}
+            </button>
+
+            {/* Auth */}
+            {isAuthenticated ? (
+              <div className="relative flex items-center gap-3" ref={dropdownRef}>
+                <button
+                  onClick={() => setProfileMenuOpen(!profileMenuOpen)}
+                  className="flex items-center space-x-1 text-sm font-medium text-[var(--primary)] hover:text-[var(--accent)] transition"
+                >
+                  <span className="font-bold">Hello, {userName}</span>
+                  <svg
+                    className={`w-4 h-4 transform transition-transform ${
+                      profileMenuOpen ? "rotate-180" : ""
+                    } text-[var(--accent)]/80`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </button>
+
+                {/* Dropdown */}
+                {profileMenuOpen && (
+                  <div className="absolute right-0 top-12 w-56 backdrop-blur-md bg-[var(--card-bg)]/80 border border-[var(--card-border)] rounded-2xl shadow-xl shadow-[var(--accent)]/10 z-50 overflow-hidden animate-fadeIn ring-1 ring-[var(--card-border)]/40">
+                    {/* Links */}
+                    <div className="py-1">
+                      <Link
+                        href="/settings"
+                        onClick={() => setProfileMenuOpen(false)}
+                        className="block px-4 py-2 text-sm text-[var(--primary)] hover:bg-[var(--hover)] hover:text-[var(--accent)] transition rounded-md"
+                      >
+                        Settings
+                      </Link>
+                    </div>
+
+                    {/* Divider + Logout */}
+                    <div className="border-t border-[var(--border)] py-1">
+                      <button
+                        onClick={handleLogout}
+                        className="w-full text-left px-4 py-2 text-sm text-[var(--secondary)] hover:bg-[var(--hover)] hover:text-[var(--accent)] transition rounded-md"
+                      >
+                        Sign out
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Link href="/login">
+                <button className="px-4 py-2 rounded-md bg-[var(--button-bg)] border border-[var(--button-border)] text-[var(--button-text)] hover:bg-[var(--button-hover)] transition flex items-center gap-2 text-sm font-medium shadow-sm">
+                  <FaSignInAlt className="h-4 w-4 text-[var(--accent)]" />
+                  <span>Login</span>
+                </button>
+              </Link>
+            )}
+          </div>
         </div>
       </div>
     </header>
