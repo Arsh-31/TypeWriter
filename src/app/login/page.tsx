@@ -27,12 +27,42 @@ export default function AuthPage() {
   const [error, setError] = useState("");
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [validationError, setValidationError] = useState("");
+
+  function validateForm() {
+    if (!email) return "Email is required.";
+    // Simple email regex
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) return "Please enter a valid email address.";
+
+    if (!password) return "Password is required.";
+    if (password.length < 6)
+      return "Password must be at least 6 characters long.";
+    // Optionally: check for a number or special char
+    // if (!/[0-9]/.test(password)) return "Password must contain a number.";
+
+    if (!isLogin) {
+      if (!username) return "Username is required.";
+      if (username.length < 3)
+        return "Username must be at least 3 characters long.";
+      if (username.length > 20)
+        return "Username must be less than 20 characters.";
+    }
+    return "";
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
+    setValidationError("");
     setError("");
 
+    const vError = validateForm();
+    if (vError) {
+      setValidationError(vError);
+      return;
+    }
+
+    setIsSubmitting(true);
     try {
       if (isLogin) {
         await signInWithEmailAndPassword(auth, email, password);
@@ -43,14 +73,12 @@ export default function AuthPage() {
           password
         );
         const user = userCredential.user;
-
         await setDoc(doc(db, "users", user.uid), {
           email: user.email,
           username,
         });
       }
       console.log("Saving user:", username);
-
       router.push("/");
     } catch (err: any) {
       setError(err.message);
@@ -99,9 +127,9 @@ export default function AuthPage() {
         </div>
 
         {/* Error Message */}
-        {error && (
+        {(validationError || error) && (
           <div className="mb-4 p-3 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg text-red-600 dark:text-red-400 text-sm text-center">
-            {error}
+            {validationError || error}
           </div>
         )}
 
@@ -119,6 +147,7 @@ export default function AuthPage() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
+                disabled={isSubmitting}
               />
             </div>
           )}
@@ -134,6 +163,7 @@ export default function AuthPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              disabled={isSubmitting}
             />
           </div>
 
@@ -148,6 +178,7 @@ export default function AuthPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              disabled={isSubmitting}
             />
           </div>
 
