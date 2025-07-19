@@ -1,7 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { FaKeyboard, FaUserCircle, FaSignInAlt, FaMoon, FaSun } from "react-icons/fa";
+import {
+  FaKeyboard,
+  FaUserCircle,
+  FaSignInAlt,
+  FaMoon,
+  FaSun,
+} from "react-icons/fa";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth, db } from "../lib/firebase";
 import { doc, getDoc } from "firebase/firestore";
@@ -105,7 +111,10 @@ export default function Navbar() {
 
             {/* Auth */}
             {isAuthenticated ? (
-              <div className="relative flex items-center gap-3" ref={dropdownRef}>
+              <div
+                className="relative flex items-center gap-3"
+                ref={dropdownRef}
+              >
                 <button
                   onClick={() => setProfileMenuOpen(!profileMenuOpen)}
                   className="flex items-center space-x-1 text-sm font-medium text-[var(--primary)] hover:text-[var(--accent)] transition"
@@ -142,7 +151,6 @@ export default function Navbar() {
                       </Link>
                     </div>
 
-                    {/* Divider + Logout */}
                     <div className="border-t border-[var(--border)] py-1">
                       <button
                         onClick={handleLogout}
